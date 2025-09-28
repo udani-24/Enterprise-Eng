@@ -1,0 +1,68 @@
+﻿@startuml Medical Portal ERD
+
+!define TABLE(name,desc) class name as "desc" << (T,#FFAAAA) >>
+!define PRIMARY_KEY(x) <b><color:#b8861b><&key></color> x</b>
+!define FOREIGN_KEY(x) <color:#aaaaaa></color> x
+!define COLUMN(x) <color:#efefef><&media-record></color> x
+!define UNIQUE(x) <color:#LightBlue></color> x
+
+' Entities
+TABLE(Patient, "Patient") {
+  PRIMARY_KEY(id) : Long
+  COLUMN(firstName) : String
+  COLUMN(lastName) : String
+  COLUMN(nic) : String <<unique>>
+  COLUMN(dob) : LocalDate
+  COLUMN(gender) : Gender
+  COLUMN(phone) : String
+  COLUMN(address) : String
+  COLUMN(createdAt) : LocalDateTime
+  COLUMN(updatedAt) : LocalDateTime
+}
+
+TABLE(Doctor, "Doctor") {
+  PRIMARY_KEY(id) : Long
+  COLUMN(name) : String
+  COLUMN(specialty) : String
+  COLUMN(phone) : String
+  COLUMN(email) : String <<unique>>
+  COLUMN(doctorId) : String <<unique>>
+  COLUMN(isApproved) : Boolean
+  COLUMN(createdAt) : LocalDateTime
+  COLUMN(updatedAt) : LocalDateTime
+}
+
+TABLE(Visit, "Visit") {
+  PRIMARY_KEY(id) : Long
+  FOREIGN_KEY(patientId) : Long
+  FOREIGN_KEY(doctorId) : Long
+  COLUMN(visitDate) : LocalDateTime
+  COLUMN(notes) : String
+  COLUMN(diagnosis) : String
+  COLUMN(createdAt) : LocalDateTime
+  COLUMN(updatedAt) : LocalDateTime
+}
+
+TABLE(Prescription, "Prescription") {
+  PRIMARY_KEY(id) : Long
+  FOREIGN_KEY(visitId) : Long
+  COLUMN(medicineName) : String
+  COLUMN(dosage) : String
+  COLUMN(durationDays) : Integer
+  COLUMN(instructions) : String
+  COLUMN(createdAt) : LocalDateTime
+  COLUMN(updatedAt) : LocalDateTime
+}
+
+' Relationships
+Patient ||--o{ Visit : "has many"
+Doctor ||--o{ Visit : "treats many"
+Visit ||--o{ Prescription : "has many"
+
+' Notes
+note right of Patient : "Patient entity stores\npersonal information\nand medical records"
+note right of Doctor : "Doctor entity stores\nprofessional information\nand approval status"
+note right of Visit : "Visit entity stores\nmedical consultation\ndetails"
+note right of Prescription : "Prescription entity stores\nmedication details\nfor each visit"
+
+@enduml

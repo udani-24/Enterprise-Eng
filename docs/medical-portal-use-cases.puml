@@ -1,0 +1,65 @@
+﻿@startuml Medical Portal Use Cases
+
+!define ACTOR(name,desc) actor name as "desc" << (A,#FFAAAA) >>
+!define USECASE(name,desc) usecase name as "desc" << (U,#AAFFAA) >>
+
+' Actors
+ACTOR(Doctor, "Doctor")
+ACTOR(Patient, "Patient")
+ACTOR(Admin, "Administrator")
+
+' Use Cases
+USECASE(RegisterPatient, "Register Patient")
+USECASE(RecordVisit, "Record Visit")
+USECASE(AddPrescription, "Add Prescription")
+USECASE(ViewPatientHistory, "View Patient History")
+USECASE(SearchPatients, "Search Patients")
+USECASE(UpdatePatientInfo, "Update Patient Information")
+USECASE(Login, "Login to System")
+USECASE(Logout, "Logout from System")
+USECASE(ManageDoctors, "Manage Doctors")
+USECASE(ApproveDoctor, "Approve Doctor Registration")
+
+' Doctor relationships
+Doctor --> RegisterPatient
+Doctor --> RecordVisit
+Doctor --> AddPrescription
+Doctor --> ViewPatientHistory
+Doctor --> SearchPatients
+Doctor --> UpdatePatientInfo
+Doctor --> Login
+Doctor --> Logout
+
+' Patient relationships
+Patient --> ViewPatientHistory
+Patient --> Login
+Patient --> Logout
+
+' Admin relationships
+Admin --> ManageDoctors
+Admin --> ApproveDoctor
+Admin --> Login
+Admin --> Logout
+
+' Use case relationships
+RecordVisit ..> AddPrescription : includes
+ViewPatientHistory ..> SearchPatients : includes
+
+' System boundary
+rectangle "Medical Portal System" {
+  RegisterPatient
+  RecordVisit
+  AddPrescription
+  ViewPatientHistory
+  SearchPatients
+  UpdatePatientInfo
+  ManageDoctors
+  ApproveDoctor
+}
+
+' Notes
+note right of Doctor : "Doctors can register patients,\nrecord visits, and manage\nmedical records"
+note right of Patient : "Patients can view their\nmedical history and\npersonal information"
+note right of Admin : "Administrators manage\ndoctor approvals and\nsystem administration"
+
+@enduml
